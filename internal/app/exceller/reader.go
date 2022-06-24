@@ -7,6 +7,10 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
+	"unicode"
+
+	"github.com/NautiloosGo/ga/cmd/ga"
 )
 
 func (c *Chans) ReadAndFormatPartners(fileName string) {
@@ -14,7 +18,7 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 	NextRow := ga.Dau{
 		Sourse:      "Partners",
 		PartnerName: "",
-		Date:        0,
+		Date:        time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		Dau:         0,
 	}
 
@@ -24,9 +28,9 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 	}
 	reader := csv.NewReader(file)
 	reader.Comma = ','
-	reader.Comment = '#' // lines that start with this will be ignored
-	reader.Read()        // use Read to remove the first line
-	reader.Read()        // use Read to remove the first line
+	reader.Comment = '#'
+	reader.Read()
+	reader.Read()
 
 	defer file.Close()
 
@@ -35,7 +39,7 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 		record, err := reader.Read()
 
 		if err == io.EOF {
-			close(c.chout)
+			// close(c.IncomingChan)
 			break
 		}
 		if err != nil {
@@ -44,19 +48,14 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 		}
 
 		rname := []rune{}
-		//проверка на вход в каталог или на страницу конкретного партнера (адрес типа /partners/ или /partners )
-		// в норме должно быть на входе /partners/'partnerName'  еще могут быть метки или адрес ко: /partners/
 		if record[0] == "/partners/" || record[0] == "/partners" || strings.Count(record[0], "/partners?") != 0 {
 			NextRow.PartnerName = "Catalogue"
 		} else {
-			//забираем из строки все что находится на месте %s
 			_, err := fmt.Sscanf(record[0], "/partners/%s", &record[0])
 			if err != nil {
-				//если ошибка, то странная url. Пишем, ERROR  и/или считаем что посетитель только каталога
-				record[0] = "ERROR" //точно так нормально делать?
+				record[0] = "ERROR"
 				fmt.Println(err)
 			}
-			// ищем в url название партнера. Сохраняем все до первого "/"
 			for _, a := range record[0] {
 				if a == '/' {
 					break
@@ -64,29 +63,88 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 					rname = append(rname, a)
 				}
 			}
-			// сохраняем название партнера в соответствующую строку в структуре
 			NextRow.PartnerName = string(rname)
 		}
 
-		massDate := [3]int{}
-		massDate[0], err = strconv.Atoi(record[3])
+		day, err := strconv.Atoi(record[3])
 		if err != nil {
 			fmt.Println(err)
 		}
-		massDate[1], err = strconv.Atoi(record[1])
+		month, err := strconv.Atoi(record[1])
 		if err != nil {
 			fmt.Println(err)
 		}
-		massDate[2], err = strconv.Atoi(record[2])
+		year, err := strconv.Atoi(record[2])
 		if err != nil {
 			fmt.Println(err)
 		}
-		NextRow.Date = massDate[0] + massDate[1]*100 + massDate[2]*10000
+		NextRow.Date = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 		NextRow.Dau, err = strconv.Atoi(record[4])
 		if err != nil {
 			fmt.Println(err)
 		}
-		// структуру соответствующую одной строке записи передаю в канал. Канал создал отдельно от структуры
-		c.inbox <- NextRow
+		c.IncomingChan <- NextRow
 	}
+}
+
+func (c *Chans) ReadAndFormatDAU(filename string) {
+	NextRow := ga.Dau{
+		Sourse:      "DAU",
+		PartnerName: "",
+		Date:        time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+		Dau:         0,
+	}
+
+	file, err := os.Open(filename)
+	if err != nil {
+		panic(err)
+	}
+	reader := csv.NewReader(file)
+	reader.Comma = ','
+	reader.Comment = '#'
+	reader.Read()
+	reader.Read()
+
+	defer file.Close()
+
+	rname := []rune{}
+	for {
+		record2, err := reader.Read()
+		if err == io.EOF {
+			//close(c.IncomingChan)
+			break
+		}
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		rname = []rune{}
+		for _, a := range record2[5] {
+			if unicode.IsNumber(a) {
+				rname = append(rname, a)
+			}
+		}
+		NextRow.Dau, err = strconv.Atoi(string(rname))
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		month, err := strconv.Atoi(string(record2[3]))
+		if err != nil {
+			fmt.Println(err)
+		}
+		day, err := strconv.Atoi(string(record2[2]))
+		if err != nil {
+			fmt.Println(err)
+		}
+		year, err := strconv.Atoi(string(record2[4]))
+		if err != nil {
+			fmt.Println(err)
+		}
+		NextRow.Date = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+
+		c.IncomingChan <- NextRow
+
+	}
+
 }

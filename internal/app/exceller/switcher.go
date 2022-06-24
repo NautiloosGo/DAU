@@ -8,6 +8,16 @@ import (
 var keyDAU = "DAU"
 var keyPartners = "Partners"
 
+type Dau struct {
+	Sourse      string
+	PartnerName string
+	Date        uint64
+	Dau         uint64
+}
+type Chans struct {
+	IncomingChan chan Dau
+}
+
 func (c *Chans) Switcher(dir string) {
 	m, err := filepath.Glob(dir)
 	if err != nil {

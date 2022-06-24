@@ -1,9 +1,15 @@
 package main
 
+import (
+	"time"
+
+	db "github.com/NautiloosGo/ga/internal/services/db"
+)
+
 type Dau struct {
 	Sourse      string
 	PartnerName string
-	Date        uint64
+	Date        time.Date
 	Dau         uint64
 }
 type Chans struct {
@@ -17,5 +23,5 @@ var Channels = Chans{
 }
 
 func main() {
-	Channels.db.FindAndProccessFiles()
+	db.Channels.FindAndProccessFiles()
 }

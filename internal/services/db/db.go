@@ -1,13 +1,18 @@
 package db
-var KeyPhrases []string
 
-const FileDir="./Original_Data/*.csv"
+// "github.com/NautiloosGo/ga/internal/app/exceller"
+const FileDir = "./originaldata/*.csv"
 
-
-func  (c *Chans) FindAndProccessFiles(){
-	c.Switcher(FileDir)
+type Dau struct {
+	Sourse      string
+	PartnerName string
+	Date        uint64
+	Dau         uint64
+}
+type Chans struct {
+	IncomingChan chan Dau
 }
 
-func  (c *Chans) Dau(){
-	c.Switcher(FileDir, KeyPhrases)
+func (c *Chans) FindAndProccessFiles() {
+	exceller.c.Switcher(FileDir)
 }
