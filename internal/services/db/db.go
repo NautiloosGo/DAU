@@ -15,4 +15,5 @@ type Chans struct {
 
 func (c *Chans) FindAndProccessFiles() {
 	exceller.c.Switcher(FileDir)
+	// exceller.c.Switcher(FileDir)
 }
