@@ -1,5 +1,9 @@
 package db
 
+import (
+	"github.com/NautiloosGo/ga/internal/app/exceller"
+)
+
 // "github.com/NautiloosGo/ga/internal/app/exceller"
 const FileDir = "./originaldata/*.csv"
 
@@ -10,10 +14,11 @@ type Dau struct {
 	Dau         uint64
 }
 type Chans struct {
-	IncomingChan chan Dau
+	IncomingDau      chan Dau
+	IncomingPartners chan Dau
 }
 
 func (c *Chans) FindAndProccessFiles() {
-	exceller.c.Switcher(FileDir)
+	exceller.Switcher(FileDir)
 	// exceller.c.Switcher(FileDir)
 }

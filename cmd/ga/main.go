@@ -9,17 +9,19 @@ import (
 type Dau struct {
 	Sourse      string
 	PartnerName string
-	Date        time.Date
+	Date        time.Time
 	Dau         uint64
 }
 type Chans struct {
-	IncomingChan chan Dau
+	IncomingDau      chan Dau
+	IncomingPartners chan Dau
 }
 
 var inbox chan Dau
 
 var Channels = Chans{
-	IncomingChan: make(chan Dau),
+	IncomingDau:      make(chan Dau),
+	IncomingPartners: make(chan Dau),
 }
 
 func main() {

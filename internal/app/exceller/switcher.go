@@ -15,7 +15,8 @@ type Dau struct {
 	Dau         uint64
 }
 type Chans struct {
-	IncomingChan chan Dau
+	IncomingDau      chan Dau
+	IncomingPartners chan Dau
 }
 
 func (c *Chans) Switcher(dir string) {

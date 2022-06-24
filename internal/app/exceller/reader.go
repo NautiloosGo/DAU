@@ -39,7 +39,7 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 		record, err := reader.Read()
 
 		if err == io.EOF {
-			// close(c.IncomingChan)
+			close(c.IncomingPartners)
 			break
 		}
 		if err != nil {
@@ -83,7 +83,7 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		c.IncomingChan <- NextRow
+		c.IncomingPartners <- NextRow
 	}
 }
 
@@ -111,7 +111,7 @@ func (c *Chans) ReadAndFormatDAU(filename string) {
 	for {
 		record2, err := reader.Read()
 		if err == io.EOF {
-			//close(c.IncomingChan)
+			close(c.IncomingDau)
 			break
 		}
 		if err != nil {
@@ -143,7 +143,7 @@ func (c *Chans) ReadAndFormatDAU(filename string) {
 		}
 		NextRow.Date = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 
-		c.IncomingChan <- NextRow
+		c.IncomingDau <- NextRow
 
 	}
 
