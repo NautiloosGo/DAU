@@ -1,23 +1,11 @@
 package main
 
 import (
-	//coll "github.com/NautiloosGo/ga/internal/app/collector"
 	"fmt"
 	ex "github.com/NautiloosGo/ga/internal/app/exceller"
 	db "github.com/NautiloosGo/ga/internal/services/db"
 	"time"
 )
-
-// type Dau struct {
-// 	Sourse      string
-// 	PartnerName string
-// 	Date        int
-// 	Dau         int
-// }
-// type Chans struct {
-// 	IncomingDau      chan Dau
-// 	IncomingPartners chan Dau
-// }
 
 var inbox chan ex.Dau
 
