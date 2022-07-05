@@ -8,11 +8,9 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
-	//"github.com/NautiloosGo/ga/cmd/ga"
 )
 
 func (c *Chans) ReadAndFormatPartners(fileName string) {
-
 	NextRow := Dau{
 		Sourse:      "Partners",
 		PartnerName: "",
@@ -35,9 +33,7 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 	for {
 
 		record, err := reader.Read()
-
 		if err == io.EOF {
-			close(c.IncomingPartners)
 			break
 		}
 		if err != nil {
@@ -109,7 +105,6 @@ func (c *Chans) ReadAndFormatDAU(filename string) {
 	for {
 		record2, err := reader.Read()
 		if err == io.EOF {
-			close(c.IncomingDau)
 			break
 		}
 		if err != nil {
@@ -140,7 +135,6 @@ func (c *Chans) ReadAndFormatDAU(filename string) {
 			fmt.Println(err)
 		}
 		NextRow.Date = day + month*100 + year*10000
-
 		c.IncomingDau <- NextRow
 
 	}
