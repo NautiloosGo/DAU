@@ -8,8 +8,8 @@ import (
 type Dau struct {
 	Sourse      string
 	PartnerName string
-	Date        time.Time
-	Dau         uint64
+	Date        int
+	Dau         int
 }
 type Chans struct {
 	IncomingDau      chan Dau
@@ -20,7 +20,7 @@ func (c *Chans) Collector() {
 	NextRow := ga.Dau{
 		Sourse:      "",
 		PartnerName: "",
-		Date:        time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+		Date:        0,
 		Dau:         0,
 	}
 

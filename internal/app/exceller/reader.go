@@ -7,18 +7,16 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 	"unicode"
-
-	"github.com/NautiloosGo/ga/cmd/ga"
+	//"github.com/NautiloosGo/ga/cmd/ga"
 )
 
 func (c *Chans) ReadAndFormatPartners(fileName string) {
 
-	NextRow := ga.Dau{
+	NextRow := Dau{
 		Sourse:      "Partners",
 		PartnerName: "",
-		Date:        time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+		Date:        0,
 		Dau:         0,
 	}
 
@@ -78,7 +76,7 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		NextRow.Date = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+		NextRow.Date = day + month*100 + year*10000
 		NextRow.Dau, err = strconv.Atoi(record[4])
 		if err != nil {
 			fmt.Println(err)
@@ -88,10 +86,10 @@ func (c *Chans) ReadAndFormatPartners(fileName string) {
 }
 
 func (c *Chans) ReadAndFormatDAU(filename string) {
-	NextRow := ga.Dau{
+	NextRow := Dau{
 		Sourse:      "DAU",
 		PartnerName: "",
-		Date:        time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+		Date:        0,
 		Dau:         0,
 	}
 
@@ -141,7 +139,7 @@ func (c *Chans) ReadAndFormatDAU(filename string) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		NextRow.Date = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+		NextRow.Date = day + month*100 + year*10000
 
 		c.IncomingDau <- NextRow
 

@@ -11,8 +11,8 @@ var keyPartners = "Partners"
 type Dau struct {
 	Sourse      string
 	PartnerName string
-	Date        uint64
-	Dau         uint64
+	Date        int
+	Dau         int
 }
 type Chans struct {
 	IncomingDau      chan Dau

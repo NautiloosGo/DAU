@@ -9,8 +9,8 @@ import (
 type Dau struct {
 	Sourse      string
 	PartnerName string
-	Date        time.Time
-	Dau         uint64
+	Date        int
+	Dau         int
 }
 type Chans struct {
 	IncomingDau      chan Dau
