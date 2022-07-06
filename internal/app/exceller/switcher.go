@@ -6,20 +6,6 @@ import (
 	"strings"
 )
 
-var keyDAU = "DAU"
-var keyPartners = "Partners"
-
-type Dau struct {
-	Sourse      string
-	PartnerName string
-	Date        int
-	Dau         int
-}
-type Chans struct {
-	IncomingDau      chan Dau
-	IncomingPartners chan Dau
-}
-
 func Switcher(c *Chans, dir string) {
 	m, err := filepath.Glob(dir)
 	if err != nil {
