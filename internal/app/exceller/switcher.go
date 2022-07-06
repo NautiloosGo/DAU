@@ -7,6 +7,7 @@ import (
 )
 
 func Switcher(c *Chans, dir string) {
+
 	m, err := filepath.Glob(dir)
 	if err != nil {
 		panic(err)

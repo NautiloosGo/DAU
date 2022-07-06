@@ -10,6 +10,7 @@ import (
 )
 
 func (c *Chans) ReadAndFormatPartners(fileName string) {
+
 	NextRow := Dau{
 		Sourse:      "Partners",
 		PartnerName: "",

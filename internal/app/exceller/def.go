@@ -13,6 +13,3 @@ type Chans struct {
 	IncomingDau      chan Dau
 	IncomingPartners chan Dau
 }
-type Catalog struct {
-	List []Dau
-}

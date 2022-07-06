@@ -20,6 +20,7 @@ func (c *Chans) ReadAndFormatDAU(filename string) {
 	file, err := os.Open(filename)
 	if err != nil {
 		panic(err)
+
 	}
 	reader := csv.NewReader(file)
 	reader.Comma = ','
@@ -33,6 +34,7 @@ func (c *Chans) ReadAndFormatDAU(filename string) {
 	for {
 		record2, err := reader.Read()
 		if err == io.EOF {
+
 			break
 		}
 		if err != nil {
@@ -64,7 +66,6 @@ func (c *Chans) ReadAndFormatDAU(filename string) {
 		}
 		NextRow.Date = day + month*100 + year*10000
 		c.IncomingDau <- NextRow
-
 	}
 
 }

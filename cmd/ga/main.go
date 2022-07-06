@@ -7,8 +7,6 @@ import (
 	db "github.com/NautiloosGo/ga/internal/services/db"
 )
 
-var inbox chan ex.Dau
-
 var Channels = ex.Chans{
 	IncomingDau:      make(chan ex.Dau),
 	IncomingPartners: make(chan ex.Dau),
@@ -28,8 +26,7 @@ func main() {
 	db.FindAndProccessFiles(&Channels)
 
 	//manage inbox chans
-
-	go col.Collector(&Catalogs, Channels)
+	col.Collector(&Catalogs, Channels)
 
 	// for {
 	// 	select {

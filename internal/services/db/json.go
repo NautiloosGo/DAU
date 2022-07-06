@@ -62,7 +62,7 @@ func GetCatalogs(c *Catlist) {
 }
 
 func RewriteStorage(catalog *Catlist) error {
-	//заливаем catalog обратно в json
+	//заливаем catalog DAU обратно в json
 	rawDataOut, err := json.MarshalIndent(&catalog.DAU, "", "  ")
 	if err != nil {
 		log.Fatal("JSON marshaling failed:", err)
@@ -72,7 +72,7 @@ func RewriteStorage(catalog *Catlist) error {
 	if err != nil {
 		log.Fatal("Cannot write updated catalog file:", err)
 	}
-
+	//заливаем catalog Partners обратно в json
 	rawDataOut, err = json.MarshalIndent(&catalog.Partners, "", "  ")
 	if err != nil {
 		log.Fatal("JSON marshaling failed:", err)
