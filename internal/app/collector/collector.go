@@ -2,34 +2,43 @@ package collector
 
 import (
 	"fmt"
-	"time"
+	ex "github.com/NautiloosGo/ga/internal/app/exceller"
+	db "github.com/NautiloosGo/ga/internal/services/db"
 )
 
-type Dau struct {
-	Sourse      string
-	PartnerName string
-	Date        time.Time
-	Dau         uint64
-}
-type Chans struct {
-	IncomingDau      chan Dau
-	IncomingPartners chan Dau
+func Collector(catalog *db.Catlist, ch ex.Chans) {
+	go CollectorDAU(catalog, ch)
+	go CollectorPartners(catalog, ch)
 }
 
-func (c *Chans) Collector() {
-	NextRow := ga.Dau{
-		Sourse:      "",
-		PartnerName: "",
-		Date:        time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
-		Dau:         0,
+func CollectorDAU(catalog *db.Catlist, ch ex.Chans) {
+	for NextRow := range ch.IncomingDau {
+		fmt.Println("received DAU", NextRow)
+		AddNewRowDau(catalog, NextRow)
 	}
+}
 
-	for {
-		select {
-		case NextRow <- c.IncomingDau:
-			fmt.Println("received DAU", NextRow.Sourse)
-		case NextRow <- c.IncomingDau:
-			fmt.Println("received Partners", NextRow.Sourse)
+func CollectorPartners(catalog *db.Catlist, ch ex.Chans) {
+	for NextRow := range ch.IncomingPartners {
+		fmt.Println("received Partners", NextRow)
+		AddNewRowPartners(catalog, NextRow)
+	}
+}
+
+func AddNewRowDau(c *db.Catlist, nextrow ex.Dau) {
+	for _, d := range c.DAU {
+		if nextrow.Date == d.Date {
+			break
 		}
+		c.DAU = append(c.DAU, nextrow)
+	}
+}
+
+func AddNewRowPartners(c *db.Catlist, nextrow ex.Dau) {
+	for _, d := range c.Partners {
+		if nextrow.Date == d.Date {
+			break
+		}
+		c.Partners = append(c.Partners, nextrow)
 	}
 }

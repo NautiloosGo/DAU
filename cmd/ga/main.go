@@ -1,29 +1,46 @@
 package main
 
 import (
-	"time"
-
+	"fmt"
+	col "github.com/NautiloosGo/ga/internal/app/collector"
+	ex "github.com/NautiloosGo/ga/internal/app/exceller"
 	db "github.com/NautiloosGo/ga/internal/services/db"
 )
 
-type Dau struct {
-	Sourse      string
-	PartnerName string
-	Date        time.Time
-	Dau         uint64
-}
-type Chans struct {
-	IncomingDau      chan Dau
-	IncomingPartners chan Dau
+var Channels = ex.Chans{
+	IncomingDau:      make(chan ex.Dau),
+	IncomingPartners: make(chan ex.Dau),
 }
 
-var inbox chan Dau
-
-var Channels = Chans{
-	IncomingDau:      make(chan Dau),
-	IncomingPartners: make(chan Dau),
+var Catalogs = db.Catlist{
+	DAU:      make([]ex.Dau, 0),
+	Partners: make([]ex.Dau, 0),
 }
 
 func main() {
-	db.Channels.FindAndProccessFiles()
+	//download json
+	db.GetCatalogs(&Catalogs)
+	fmt.Println(Catalogs)
+
+	//start download data (parsing .csv)
+	db.FindAndProccessFiles(&Channels)
+
+	//manage inbox chans
+	col.Collector(&Catalogs, Channels)
+
+	// for {
+	// 	select {
+	// 	case NextRow := <-Channels.IncomingDau:
+	// 		fmt.Println("received DAU", NextRow)
+	// 		col.AddNewRowDau(&Catalogs, NextRow)
+	// 	case NextRow := <-Channels.IncomingPartners:
+	// 		fmt.Println("received Partners", NextRow)
+	// 		col.AddNewRowPartners(&Catalogs, NextRow)
+	// 	default:
+	// 		time.Sleep(1 * time.Second)
+	// 	}
+	// }
+
+	db.RewriteStorage(&Catalogs)
+
 }
